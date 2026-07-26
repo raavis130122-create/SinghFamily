@@ -5,47 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Singh Parivar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ============ Design tokens ============ */
   :root{
     --bg:#F7F5EE;
+    --bg-soft:#EFEADD;
     --moss:#3E5C46;
-    --moss-deep:#25381F;
-    --sand:#E8A33D;
+    --moss-deep:#1E3321;
+    --moss-bright:#5C8A65;
+    --clay:#C1602C;
+    --gold:#E8A33D;
     --ink:#1C1E18;
     --muted:#6B6A5E;
-    --card:#FFFFFF;
-    --line:#D8D2BC;
+    --card:rgba(255,255,255,0.68);
+    --card-solid:#FFFFFF;
+    --line:rgba(28,30,24,0.12);
+    --glass-border:rgba(255,255,255,0.55);
+    --shadow:0 10px 34px rgba(37,56,32,0.10);
+    --blob-a:#5C8A65;
+    --blob-b:#E8A33D;
+    --blob-c:#C1602C;
+  }
+  html[data-theme="dark"]{
+    --bg:#0D1510;
+    --bg-soft:#121C15;
+    --moss:#6FA97D;
+    --moss-deep:#0A120B;
+    --moss-bright:#8FCB9B;
+    --clay:#E38657;
+    --gold:#F2B65C;
+    --ink:#ECE9DF;
+    --muted:#9AA294;
+    --card:rgba(28,40,31,0.55);
+    --card-solid:#152119;
+    --line:rgba(236,233,223,0.12);
+    --glass-border:rgba(255,255,255,0.08);
+    --shadow:0 10px 34px rgba(0,0,0,0.45);
+    --blob-a:#2E5B3C;
+    --blob-b:#8A5A22;
+    --blob-c:#5C2A16;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
   body{
     background:var(--bg);
     color:var(--ink);
     font-family:'Inter', sans-serif;
     -webkit-font-smoothing:antialiased;
+    transition:background .35s ease, color .35s ease;
+    overflow-x:hidden;
+    position:relative;
   }
   a{ color:inherit; }
-  .wrap{ max-width:960px; margin:0 auto; padding:0 22px; }
+  .wrap{ max-width:960px; margin:0 auto; padding:0 22px; position:relative; z-index:1; }
 
-  /* ---------- Top bar + tabs ---------- */
+  /* ============ Ambient gradient atmosphere ============ */
+  .atmosphere{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .atmosphere span{
+    position:absolute; border-radius:50%; filter:blur(70px); opacity:.28;
+    animation:drift 26s ease-in-out infinite;
+  }
+  .atmosphere span:nth-child(1){ width:420px; height:420px; background:var(--blob-a); top:-120px; left:-100px; animation-duration:30s; }
+  .atmosphere span:nth-child(2){ width:340px; height:340px; background:var(--blob-b); top:10%; right:-120px; animation-duration:24s; animation-delay:-6s; }
+  .atmosphere span:nth-child(3){ width:300px; height:300px; background:var(--blob-c); bottom:-100px; left:20%; animation-duration:34s; animation-delay:-12s; }
+  @keyframes drift{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    33%{ transform:translate(30px,40px) scale(1.08); }
+    66%{ transform:translate(-25px,20px) scale(0.96); }
+  }
+
+  /* ============ Top bar + tabs ============ */
   .topbar{
     position:sticky; top:0; z-index:10;
-    background:rgba(247,245,238,0.92);
-    backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);
+    background:var(--card);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border-bottom:1px solid var(--glass-border);
+    transition:background .35s ease, border-color .35s ease;
   }
   .topbar-inner{
     max-width:960px; margin:0 auto; padding:16px 22px 0;
+    display:flex; flex-direction:column;
   }
+  .topbar-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .brand{
-    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16px;
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16.5px;
     margin-bottom:14px;
   }
-  .brand span{ color:var(--moss); }
-  .tabs{
-    display:flex; gap:6px;
-    overflow-x:auto;
+  .brand span{
+    background:linear-gradient(100deg, var(--moss), var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
+  .theme-toggle{
+    width:34px; height:34px; border-radius:50%; margin-bottom:14px;
+    background:var(--card-solid); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:transform .25s ease, box-shadow .25s ease;
+    flex-shrink:0;
+  }
+  .theme-toggle:hover{ transform:translateY(-1px) rotate(12deg); box-shadow:var(--shadow); }
+  .theme-toggle svg{ width:16px; height:16px; stroke:var(--moss-deep); }
+  html[data-theme="dark"] .theme-toggle svg{ stroke:var(--gold); }
+  .theme-toggle .i-moon{ display:none; }
+  html[data-theme="dark"] .theme-toggle .i-sun{ display:none; }
+  html[data-theme="dark"] .theme-toggle .i-moon{ display:block; }
+
+  .tabs{ display:flex; gap:6px; overflow-x:auto; }
   .tab-btn{
     font-family:'Inter', sans-serif;
     font-size:13.5px; font-weight:600;
@@ -55,81 +122,116 @@
     cursor:pointer;
     border-bottom:2px solid transparent;
     white-space:nowrap;
+    transition:color .2s ease, border-color .2s ease;
   }
-  .tab-btn.active{
-    color:var(--moss-deep);
-    border-bottom:2px solid var(--moss);
-  }
+  .tab-btn.active{ color:var(--moss); border-bottom:2px solid var(--gold); }
+  .tab-btn:hover{ color:var(--moss); }
 
   .page{ display:none; padding-bottom:60px; }
-  .page.active{ display:block; }
-
-  /* ---------- Home page ---------- */
-  .village-banner{
-    margin-top:24px;
-    border-radius:20px;
-    overflow:hidden;
-    border:1px solid var(--line);
-    height:160px;
+  .page.active{ display:block; animation:pageIn .5s ease both; }
+  @keyframes pageIn{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
   }
-  .village-banner svg{ width:100%; height:100%; display:block; }
 
+  /* ============ Banner ============ */
+  .banner{
+    margin-top:24px; border-radius:24px; overflow:hidden;
+    border:1px solid var(--glass-border); height:180px;
+    box-shadow:var(--shadow); position:relative;
+  }
+  .banner svg{ width:100%; height:100%; display:block; }
+  .sun{ animation:pulse-glow 5s ease-in-out infinite; transform-origin:center; }
+  .cloud{ animation:driftx 40s linear infinite; }
+  .cloud2{ animation:driftx 55s linear infinite reverse; }
+  @keyframes pulse-glow{ 0%,100%{ opacity:1; } 50%{ opacity:.75; } }
+  @keyframes driftx{ from{ transform:translateX(-40px);} to{ transform:translateX(840px);} }
+  .roots-line{ stroke-dasharray:900; stroke-dashoffset:900; animation:draw 2.4s ease forwards; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  /* ============ Hero ============ */
   .hero{ padding:52px 0 30px; }
   .eyebrow{
     display:inline-flex; align-items:center; gap:8px;
-    font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
-    color:var(--moss); background:#EAF0E9; padding:7px 14px; border-radius:100px;
+    font-size:12.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--moss); background:var(--card); border:1px solid var(--glass-border);
+    backdrop-filter:blur(10px);
+    padding:7px 14px; border-radius:100px;
   }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); animation:blink 1.8s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
   h1{
     font-family:'Space Grotesk', sans-serif; font-weight:700;
     font-size:clamp(34px, 7vw, 58px);
-    letter-spacing:-0.02em; color:var(--moss-deep);
-    margin:16px 0 10px; line-height:1.03;
+    letter-spacing:-.02em; line-height:1.03;
+    margin:16px 0 10px;
+    background:linear-gradient(100deg, var(--moss-deep) 20%, var(--moss) 55%, var(--clay) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .lede{ font-size:16.5px; line-height:1.6; color:#42463C; max-width:560px; }
+  html[data-theme="dark"] h1{ background:linear-gradient(100deg, var(--moss-bright) 10%, var(--gold) 70%, var(--clay) 100%); -webkit-background-clip:text; background-clip:text; }
+  .lede{ font-size:16.5px; line-height:1.6; color:var(--muted); max-width:560px; }
+  .lede em{ font-family:'Fraunces', serif; font-style:italic; color:var(--ink); font-weight:500; }
 
-  .link-grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:14px;
-    margin-top:34px;
-  }
+  .link-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:34px; }
   @media (max-width:600px){ .link-grid{ grid-template-columns:1fr; } }
   .link-card{
-    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    background:var(--card); border:1px solid var(--glass-border); border-radius:18px;
+    backdrop-filter:blur(12px) saturate(150%);
     padding:22px; cursor:pointer; text-align:left;
+    box-shadow:var(--shadow);
+    transition:transform .3s ease, box-shadow .3s ease;
   }
-  .link-card .k{ font-size:12px; color:var(--sand); font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+  .link-card:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(37,56,32,0.16); }
+  .link-card .k{ font-size:12px; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
   .link-card .t{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:var(--moss-deep); margin:8px 0 6px; }
+  html[data-theme="dark"] .link-card .t{ color:var(--moss-bright); }
   .link-card .d{ font-size:13.5px; color:var(--muted); line-height:1.5; }
 
-  /* ---------- Village page (reuse) ---------- */
+  /* ============ Section titles ============ */
   .stitle{
     font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:20px;
     margin:40px 0 16px; display:flex; align-items:center; gap:10px;
   }
-  .stitle::before{ content:""; width:8px; height:8px; background:var(--sand); border-radius:2px; flex-shrink:0; }
+  .stitle::before{ content:""; width:8px; height:8px; background:var(--gold); border-radius:2px; flex-shrink:0; }
+
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
   .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
   .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   @media (max-width:640px){ .grid3{ grid-template-columns:1fr 1fr; } .grid2{ grid-template-columns:1fr; } }
-  .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; }
-  .card .k{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; font-weight:600; }
+
+  .card{
+    background:var(--card); border:1px solid var(--glass-border); border-radius:18px; padding:22px;
+    backdrop-filter:blur(12px) saturate(150%);
+    box-shadow:var(--shadow);
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{ transform:translateY(-2px); }
+  .card .k{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
   .card .v{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:28px; color:var(--moss-deep); margin-top:8px; }
+  html[data-theme="dark"] .card .v{ color:var(--moss-bright); }
   .card .d{ font-size:13px; color:var(--muted); margin-top:6px; line-height:1.5; }
-  table{ width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
-  th{ text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); padding:14px 18px; border-bottom:1px solid var(--line); font-weight:600; }
+
+  table{ width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--glass-border); border-radius:18px; overflow:hidden; backdrop-filter:blur(12px); }
+  th{ text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); padding:14px 18px; border-bottom:1px solid var(--line); font-weight:600; }
   th.r, td.r{ text-align:right; }
   td{ padding:13px 18px; border-bottom:1px solid var(--line); font-size:14.5px; }
   tr:last-child td{ border-bottom:none; }
   td.strong{ font-weight:700; color:var(--moss-deep); }
-  .bars{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px; }
+  html[data-theme="dark"] td.strong{ color:var(--moss-bright); }
+
+  .bars{ background:var(--card); border:1px solid var(--glass-border); border-radius:18px; padding:24px; backdrop-filter:blur(12px); box-shadow:var(--shadow); }
   .prow{ margin-bottom:20px; }
   .prow:last-child{ margin-bottom:0; }
   .plabel{ display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px; }
   .plabel b{ color:var(--moss-deep); }
-  .ptrack{ height:10px; background:var(--bg); border-radius:100px; overflow:hidden; }
-  .pfill{ height:100%; border-radius:100px; background:var(--moss); }
-  .pfill.sand{ background:var(--sand); }
+  html[data-theme="dark"] .plabel b{ color:var(--moss-bright); }
+  .ptrack{ height:10px; background:var(--bg-soft); border-radius:100px; overflow:hidden; }
+  .pfill{ height:100%; border-radius:100px; background:linear-gradient(90deg, var(--moss), var(--moss-bright)); width:0; transition:width 1.2s cubic-bezier(.16,1,.3,1); }
+  .pfill.sand{ background:linear-gradient(90deg, var(--gold), var(--clay)); }
 
-  /* ---------- Vanshavali page ---------- */
+  /* ============ Vanshavali / family tree ============ */
   .swipe-hint{ text-align:center; font-size:12.5px; color:var(--muted); margin:10px 0 6px; }
   .scroller{ overflow-x:auto; padding:20px 4px 40px; -webkit-overflow-scrolling:touch; }
   .tree, .tree ul, .tree li{ list-style:none; margin:0; padding:0; position:relative; }
@@ -143,27 +245,73 @@
   .tree li:first-child::before, .tree li:last-child::after{ border:0 none; }
   .tree li:last-child::before{ border-right:2px solid var(--line); border-radius:0 6px 0 0; }
   .tree li:first-child::after{ border-radius:6px 0 0 0; }
-  .tree ul ul::before{ content:''; position:absolute; top:0; left:50%; border-left:2px solid var(--line); width:0; height:34px; }
-  .person{ display:inline-block; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; font-size:13.5px; line-height:1.5; box-shadow:0 2px 6px rgba(37,56,32,0.05); min-width:150px; }
-  .avatar{ width:56px; height:56px; border-radius:50%; margin:0 auto 8px; background:var(--moss); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:18px; overflow:hidden; border:2px solid var(--card); box-shadow:0 0 0 2px var(--line); }
-  .person.root .avatar{ background:#fff; color:var(--moss-deep); box-shadow:0 0 0 2px rgba(255,255,255,0.4); }
+  .tree ul ul::before{ content:''; position:absolute; top:0; left:50%; border-left:2px solid var(--gold); opacity:.5; width:0; height:34px; }
+
+  .person{
+    display:inline-block; background:var(--card); border:1px solid var(--glass-border); border-radius:16px;
+    padding:16px 18px; font-size:13.5px; line-height:1.5; min-width:150px;
+    backdrop-filter:blur(14px) saturate(150%);
+    box-shadow:var(--shadow);
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .person:hover{ transform:translateY(-4px); box-shadow:0 18px 40px rgba(37,56,32,0.18); }
+  .avatar{
+    width:56px; height:56px; border-radius:50%; margin:0 auto 8px;
+    background:linear-gradient(135deg, var(--moss), var(--moss-bright));
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:18px;
+    overflow:hidden; position:relative;
+    box-shadow:0 0 0 3px var(--bg), 0 0 0 4px var(--gold);
+  }
+  .person.root .avatar{ background:rgba(255,255,255,.15); color:#fff; box-shadow:0 0 0 3px var(--moss-deep), 0 0 0 4px rgba(255,255,255,.5); }
   .person .name{ font-family:'Space Grotesk', sans-serif; font-weight:700; color:var(--moss-deep); font-size:15px; display:block; }
-  .person .tag{ display:block; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin-top:3px; }
-  .person.root{ background:var(--moss-deep); border-color:var(--moss-deep); }
+  html[data-theme="dark"] .person .name{ color:var(--moss-bright); }
+  .person .tag{ display:block; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:3px; }
+  .person.root{ background:linear-gradient(150deg, var(--moss-deep), var(--moss)); border-color:var(--moss-deep); }
   .person.root .name, .person.root .tag{ color:#fff; }
-  .person.couple{ background:#EAF0E9; border-color:#CFE0CD; }
-  .person.branch{ border-color:var(--sand); }
-  .person .child-chip{ display:inline-block; background:var(--bg); border:1px solid var(--line); border-radius:100px; padding:4px 10px; font-size:12px; margin:4px 3px 0; color:var(--ink); }
+  .person.root .tag{ color:rgba(255,255,255,.75); }
+  .person.couple{ background:linear-gradient(150deg, rgba(92,138,101,.16), rgba(232,163,61,.10)); border-color:rgba(92,138,101,.35); }
+  .person.branch{ border-color:rgba(232,163,61,.5); border-width:1px; border-left-width:3px; }
+  .person.you{ border-color:var(--moss); box-shadow:0 0 0 3px rgba(92,138,101,.18), var(--shadow); animation:you-pulse 3s ease-in-out infinite; }
+  @keyframes you-pulse{ 0%,100%{ box-shadow:0 0 0 3px rgba(92,138,101,.18), var(--shadow); } 50%{ box-shadow:0 0 0 7px rgba(232,163,61,.16), var(--shadow); } }
+  .person .child-chip{
+    display:inline-block; background:var(--bg-soft); border:1px solid var(--line); border-radius:100px;
+    padding:4px 10px; font-size:12px; margin:4px 3px 0; color:var(--ink);
+  }
 
   footer{ text-align:center; padding:26px 20px 50px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); margin-top:20px; }
   footer a{ color:var(--moss); text-decoration:underline; }
+
+  /* ============ Mobile refinements ============ */
+  @media (max-width:600px){
+    .banner{ height:150px; border-radius:18px; }
+    .hero{ padding:36px 0 20px; }
+    .topbar-inner{ padding:14px 16px 0; }
+    .wrap{ padding:0 16px; }
+    .card{ padding:18px; }
+    .person{ min-width:150px; padding:14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 </style>
 </head>
 <body>
 
+<div class="atmosphere"><span></span><span></span><span></span></div>
+
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="brand">Singh<span> Parivar</span></div>
+    <div class="topbar-row">
+      <div class="brand">Singh<span> Parivar</span></div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+      </button>
+    </div>
     <div class="tabs">
       <button class="tab-btn active" data-page="gaon">My Village</button>
       <button class="tab-btn" data-page="vanshavali">About Me</button>
@@ -173,16 +321,39 @@
 
 <div class="wrap">
 
-  <!-- ================= ABOUT ME (Vanshavali) ================= -->
+  <!-- ================= VANSHAVALI ================= -->
   <section class="page" id="vanshavali">
+    <div class="banner">
+      <svg viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rootsSky" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="var(--moss-deep)"/>
+            <stop offset="100%" stop-color="var(--moss)"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="220" fill="url(#rootsSky)"/>
+        <g stroke="var(--gold)" stroke-width="2" fill="none" opacity="0.65">
+          <path class="roots-line" d="M400 30 C 400 70, 250 70, 220 110 C 200 135, 120 130, 90 170"/>
+          <path class="roots-line" d="M400 30 C 400 70, 400 70, 400 110 C 400 140, 400 140, 400 190"/>
+          <path class="roots-line" d="M400 30 C 400 70, 550 70, 580 110 C 610 140, 660 130, 700 165"/>
+          <path class="roots-line" d="M220 110 C 210 140, 260 150, 260 190"/>
+          <path class="roots-line" d="M580 110 C 590 140, 540 150, 540 190"/>
+        </g>
+        <circle cx="400" cy="30" r="10" fill="var(--gold)"/>
+        <g fill="var(--gold)" opacity="0.9">
+          <circle cx="90" cy="170" r="5"/><circle cx="260" cy="190" r="5"/>
+          <circle cx="400" cy="190" r="5"/><circle cx="540" cy="190" r="5"/><circle cx="700" cy="165" r="5"/>
+        </g>
+      </svg>
+    </div>
     <div class="hero" style="padding-top:36px;">
-      <div class="eyebrow">Singh Parivar</div>
-      <h1 style="font-size:clamp(30px,6vw,48px);">About Me</h1>
-      <p class="lede">Main Ramanuj Singh — yeh raha humara poora parivar, Dada Rajpati Singh se lekar aaj tak.</p>
+      <div class="eyebrow"><span class="dot"></span>Singh Parivar</div>
+      <h1 style="font-size:clamp(30px,6vw,48px);">About me</h1>
+      <p class="lede">Main <em>Ramanuj Singh</em> — yeh raha humara poora parivar, Dada Rajpati Singh se lekar aaj tak.</p>
     </div>
 
     <div class="stitle" style="margin-top:36px;">Digital Vanshavali</div>
-    <p class="swipe-hint">↔ Swipe sideways to see the full tree</p>
+    <p class="swipe-hint">&#8596; Swipe sideways to see the full tree</p>
 
     <div class="scroller">
       <ul class="tree">
@@ -190,14 +361,14 @@
           <div class="person root">
             <div class="avatar">R+F</div>
             <span class="name">Rajpati Singh &amp; Fekna Singh</span>
-            <span class="tag">Dada · Dadi</span>
+            <span class="tag">Dada &middot; Dadi</span>
           </div>
           <ul>
             <li>
               <div class="person couple">
                 <div class="avatar">S+U</div>
                 <span class="name">Sudhakar Singh &amp; Urmila Singh</span>
-                <span class="tag">Papa · Mummy</span>
+                <span class="tag">Papa &middot; Mummy</span>
               </div>
               <ul>
 
@@ -240,10 +411,10 @@
                 </li>
 
                 <li>
-                  <div class="person branch" style="border-color:var(--moss); box-shadow:0 0 0 2px rgba(62,92,70,0.15);">
+                  <div class="person branch you">
                     <div class="avatar">RS</div>
                     <span class="name">Ramanuj Singh</span>
-                    <span class="tag">w/o Vinita Singh · (You)</span>
+                    <span class="tag">w/o Vinita Singh &middot; (You)</span>
                     <div style="margin-top:8px;">
                       <span class="child-chip">Raavi Singh</span>
                     </div>
@@ -260,11 +431,23 @@
 
   <!-- ================= GAON ================= -->
   <section class="page active" id="gaon">
-    <div class="village-banner">
+    <div class="banner">
       <svg viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <rect width="800" height="220" fill="#EAF0E9"/>
-        <circle cx="670" cy="55" r="34" fill="#E8A33D"/>
-        <path d="M0 165 Q200 130 400 160 T800 150 V220 H0 Z" fill="#C9DFC0"/>
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--moss-deep)"/>
+            <stop offset="100%" stop-color="var(--moss-bright)"/>
+          </linearGradient>
+          <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="var(--gold)"/>
+            <stop offset="100%" stop-color="var(--clay)"/>
+          </radialGradient>
+        </defs>
+        <rect width="800" height="220" fill="url(#skyGrad)"/>
+        <circle class="sun" cx="670" cy="55" r="34" fill="url(#sunGrad)"/>
+        <ellipse class="cloud" cx="150" cy="45" rx="46" ry="14" fill="#fff" opacity="0.18"/>
+        <ellipse class="cloud2" cx="380" cy="70" rx="34" ry="10" fill="#fff" opacity="0.14"/>
+        <path d="M0 165 Q200 130 400 160 T800 150 V220 H0 Z" fill="#C9DFC0" opacity="0.9"/>
         <path d="M0 185 Q220 160 420 182 T800 178 V220 H0 Z" fill="#AACBA0"/>
         <g fill="#7FA872">
           <ellipse cx="120" cy="150" rx="14" ry="22"/>
@@ -287,39 +470,39 @@
       </svg>
     </div>
     <div class="hero" style="padding-top:36px;">
-      <div class="eyebrow">Sagri Tehsil, Azamgarh · Uttar Pradesh</div>
+      <div class="eyebrow"><span class="dot"></span>Sagri Tehsil, Azamgarh &middot; Uttar Pradesh</div>
       <h1 style="font-size:clamp(30px,6vw,48px);">Meghai Khas</h1>
       <p class="lede">A rural village spanning <b>154.62 hectares</b>, with Census village code <b>193242</b>.</p>
     </div>
 
     <div class="stitle">Location &amp; Administration</div>
     <div class="grid2">
-      <div class="card"><div class="k">District &amp; State</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azamgarh district, Uttar Pradesh</div></div>
-      <div class="card"><div class="k">Block &amp; Tehsil</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azmatgarh community development block, Sagri subdivision</div></div>
-      <div class="card"><div class="k">Pincode</div><div class="d" style="font-size:14.5px; margin-top:8px;">276124 (Ajamat Garh Estate post office area)</div></div>
-      <div class="card"><div class="k">Governance</div><div class="d" style="font-size:14.5px; margin-top:8px;">Administered by an elected village head (Sarpanch) under the Panchayati Raj Act</div></div>
+      <div class="card reveal"><div class="k">District &amp; State</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azamgarh district, Uttar Pradesh</div></div>
+      <div class="card reveal"><div class="k">Block &amp; Tehsil</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azmatgarh community development block, Sagri subdivision</div></div>
+      <div class="card reveal"><div class="k">Pincode</div><div class="d" style="font-size:14.5px; margin-top:8px;">276124 (Ajamat Garh Estate post office area)</div></div>
+      <div class="card reveal"><div class="k">Governance</div><div class="d" style="font-size:14.5px; margin-top:8px;">Administered by an elected village head (Sarpanch) under the Panchayati Raj Act</div></div>
     </div>
 
     <div class="stitle">Demographics (Census 2011)</div>
     <div class="grid3">
-      <div class="card"><div class="k">Total Population</div><div class="v">2,173</div></div>
-      <div class="card"><div class="k">Households</div><div class="v">362</div></div>
-      <div class="card"><div class="k">Gender Ratio</div><div class="v">1,052</div><div class="d">females per 1,000 males — above the state average</div></div>
+      <div class="card reveal"><div class="k">Total Population</div><div class="v">2,173</div></div>
+      <div class="card reveal"><div class="k">Households</div><div class="v">362</div></div>
+      <div class="card reveal"><div class="k">Gender Ratio</div><div class="v">1,052</div><div class="d">females per 1,000 males &mdash; above the state average</div></div>
     </div>
 
     <div class="stitle">Literacy Rate</div>
-    <div class="bars">
+    <div class="bars reveal">
       <div class="prow">
         <div class="plabel"><span>Overall</span><b>76.12%</b></div>
-        <div class="ptrack"><div class="pfill" style="width:76.12%"></div></div>
+        <div class="ptrack"><div class="pfill" data-w="76.12"></div></div>
       </div>
       <div class="prow">
         <div class="plabel"><span>Male</span><b>87.01%</b></div>
-        <div class="ptrack"><div class="pfill" style="width:87.01%"></div></div>
+        <div class="ptrack"><div class="pfill" data-w="87.01"></div></div>
       </div>
       <div class="prow">
         <div class="plabel"><span>Female</span><b>66.09%</b></div>
-        <div class="ptrack"><div class="pfill" style="width:66.09%"></div></div>
+        <div class="ptrack"><div class="pfill sand" data-w="66.09"></div></div>
       </div>
     </div>
 
@@ -331,20 +514,53 @@
 </div>
 
 <footer>
-  Singh Parivar · digital family website
+  Singh Parivar &middot; digital family website
 </footer>
 
 <script>
+  // theme
+  (function(){
+    var root = document.documentElement;
+    var saved = localStorage.getItem('theme');
+    if(saved){ root.setAttribute('data-theme', saved); }
+    else if(window.matchMedia('(prefers-color-scheme: dark)').matches){ root.setAttribute('data-theme','dark'); }
+    document.getElementById('themeToggle').addEventListener('click', function(){
+      var cur = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', cur);
+      localStorage.setItem('theme', cur);
+    });
+  })();
+
   function showPage(id){
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     document.querySelector('.tab-btn[data-page="' + id + '"]').classList.add('active');
     window.scrollTo(0,0);
+    triggerReveal();
+    triggerBars();
   }
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=> showPage(btn.dataset.page));
   });
+
+  // scroll reveal
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in-view'); } });
+  }, { threshold:0.15 });
+  function triggerReveal(){
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  }
+  triggerReveal();
+
+  // animated bar fill
+  function triggerBars(){
+    document.querySelectorAll('.pfill').forEach(function(el){
+      var w = el.getAttribute('data-w');
+      requestAnimationFrame(function(){ el.style.width = w + '%'; });
+    });
+  }
+  triggerBars();
 </script>
 
 </body>
