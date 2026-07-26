@@ -217,12 +217,13 @@
   .gal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
   @media (max-width:640px){ .gal-grid{ grid-template-columns:1fr 1fr; } }
   .gal-item{ position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--line); aspect-ratio:4/3; cursor:pointer; }
-  .gal-item svg{ width:100%; height:100%; transition:transform 0.4s ease; }
-  .gal-item:hover svg{ transform:scale(1.07); }
+  .gal-item svg, .gal-item img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease; }
+  .gal-item:hover svg, .gal-item:hover img{ transform:scale(1.07); }
   .gal-item .cap{ position:absolute; left:0; right:0; bottom:0; padding:8px 10px; font-size:11.5px; font-weight:600; color:#fff; background:linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0)); }
   .lightbox{ position:fixed; inset:0; background:rgba(20,22,16,0.92); z-index:300; display:none; align-items:center; justify-content:center; padding:24px; }
   .lightbox.open{ display:flex; }
-  .lightbox .lb-art{ max-width:520px; width:100%; border-radius:16px; overflow:hidden; }
+  .lightbox .lb-art{ max-width:560px; max-height:74vh; width:100%; border-radius:16px; overflow:hidden; }
+  .lightbox .lb-art img{ width:100%; height:100%; max-height:74vh; object-fit:contain; display:block; background:#111; }
   .lightbox .lb-cap{ text-align:center; color:#F7F5EE; margin-top:14px; font-size:13.5px; }
   .lightbox .lb-close{ position:fixed; top:22px; right:22px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25); color:#fff; cursor:pointer; }
 
@@ -568,34 +569,26 @@
   }
   observeReveals();
 
-  /* ---------- Village gallery (SVG tiles, no external images) ---------- */
+  /* ---------- Village gallery (real photos) ---------- */
   (function(){
     const items = [
-      { name:'Khet-Khaliyan', color:'#7FA872' },
-      { name:'Gaon Ka Rasta', color:'#E8A33D' },
-      { name:'Ghar Ka Aangan', color:'#3E5C46' },
-      { name:'Peepal Chaupal', color:'#AD5A2B' },
-      { name:'Talaab', color:'#4C8FA0' },
-      { name:'Shaam Ka Manzar', color:'#B36B3E' }
+      { name:'Khet-Khaliyan', src:'images/khet-khaliyan.jpg' },
+      { name:'Gaon Ka Rasta', src:'images/gaon-ka-rasta.jpg' },
+      { name:'Ghar Ka Aangan', src:'images/ghar-ka-aangan.jpg' },
+      { name:'Peepal Chaupal', src:'images/peepal-chaupal.jpg' },
+      { name:'Talaab', src:'images/talaab.jpg' },
+      { name:'Shaam Ka Manzar', src:'images/shaam-ka-manzar.jpg' }
     ];
-    function tile(seed, color, name){
-      return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
-        <rect width="300" height="220" fill="${color}" opacity="0.16"/>
-        <path d="M0 ${140+seed%20} Q150 ${100+seed%25} 300 ${130+seed%20}" stroke="${color}" stroke-width="2" fill="none"/>
-        <circle cx="${60+seed%40}" cy="${50+seed%20}" r="16" fill="${color}" opacity="0.5"/>
-        <path d="M${90+seed%30} 220 V${140+seed%15} L${150+seed%10} ${90+seed%15} L${210-seed%20} ${140+seed%15} V220" stroke="${color}" stroke-width="1.6" fill="none"/>
-      </svg>`;
-    }
     const grid = document.getElementById('galGrid');
     grid.innerHTML = items.map((it,i)=>
-      `<div class="gal-item" data-i="${i}">${tile(i*9+4,it.color,it.name)}<div class="cap">${it.name}</div></div>`
+      `<div class="gal-item" data-i="${i}"><img src="${it.src}" alt="${it.name}" loading="lazy" /><div class="cap">${it.name}</div></div>`
     ).join('');
     const lb = document.getElementById('lightbox');
     const lbArt = document.getElementById('lbArt');
     const lbCap = document.getElementById('lbCap');
     grid.querySelectorAll('.gal-item').forEach((el,i)=>{
       el.addEventListener('click', ()=>{
-        lbArt.innerHTML = tile(i*9+4, items[i].color, items[i].name);
+        lbArt.innerHTML = `<img src="${items[i].src}" alt="${items[i].name}" />`;
         lbCap.textContent = items[i].name;
         lb.classList.add('open');
       });
