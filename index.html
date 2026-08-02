@@ -5,6 +5,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Singh Parivar</title>
+<link rel="icon" href="images/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -276,9 +280,37 @@
   .chat-input-row{ display:flex; gap:6px; padding:12px; border-top:1px solid var(--line); }
   .chat-input-row input{ flex:1; padding:9px 12px; border-radius:100px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-size:12.5px; }
   .chat-input-row button{ width:34px; height:34px; border-radius:50%; border:none; background:var(--sand); color:#fff; cursor:pointer; }
+
+  /* ---------- Loading splash ---------- */
+  #splash{
+    position:fixed; inset:0; z-index:500;
+    background:linear-gradient(160deg,var(--moss-deep),#1A2A16);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;
+    transition:opacity 0.5s ease, visibility 0.5s ease;
+  }
+  #splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  #splash .s-mark{
+    width:68px; height:68px; border-radius:18px;
+    background:linear-gradient(160deg,#4B6E52,#25381F);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk', serif; font-weight:700; font-size:34px; color:#F7F5EE;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    animation:s-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes s-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
+  #splash .s-word{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14px; letter-spacing:0.06em; text-transform:uppercase; color:#EAF0E9; opacity:0.85; }
+  #splash .s-track{ width:120px; height:3px; border-radius:100px; background:rgba(255,255,255,0.15); overflow:hidden; }
+  #splash .s-fill{ width:40%; height:100%; background:var(--sand); border-radius:100px; animation:s-load 1.1s ease-in-out infinite; }
+  @keyframes s-load{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(340%);} }
 </style>
 </head>
 <body>
+
+<div id="splash">
+  <div class="s-mark">S</div>
+  <div class="s-word">Singh Parivar</div>
+  <div class="s-track"><div class="s-fill"></div></div>
+</div>
 
 <div class="topbar">
   <div class="topbar-inner">
@@ -545,6 +577,17 @@
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=> showPage(btn.dataset.page));
   });
+
+  /* ---------- Loading splash ---------- */
+  (function(){
+    const splash = document.getElementById('splash');
+    function hideSplash(){ splash.classList.add('hide'); setTimeout(()=> splash.remove(), 600); }
+    if(document.readyState === 'complete'){ setTimeout(hideSplash, 500); }
+    else{
+      window.addEventListener('load', ()=> setTimeout(hideSplash, 500));
+      setTimeout(hideSplash, 2500); // safety fallback
+    }
+  })();
 
   /* ---------- Dark mode ---------- */
   (function(){
