@@ -235,6 +235,14 @@
   .gal-item svg, .gal-item img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease; }
   .gal-item:hover svg, .gal-item:hover img{ transform:scale(1.07); }
   .gal-item .cap{ position:absolute; left:0; right:0; bottom:0; padding:8px 10px; font-size:11.5px; font-weight:600; color:#fff; background:linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0)); }
+  .gal-item .play-badge{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:44px; height:44px; border-radius:50%; background:rgba(20,22,16,0.55);
+    display:flex; align-items:center; justify-content:center; pointer-events:none;
+    backdrop-filter:blur(2px);
+  }
+  .gal-item .play-badge svg{ width:18px; height:18px; color:#fff; margin-left:2px; }
+  .lightbox .lb-art video{ width:100%; height:100%; max-height:74vh; display:block; background:#111; }
   .lightbox{ position:fixed; inset:0; background:rgba(20,22,16,0.92); z-index:300; display:none; align-items:center; justify-content:center; padding:24px; }
   .lightbox.open{ display:flex; }
   .lightbox .lb-art{ max-width:560px; max-height:74vh; width:100%; border-radius:16px; overflow:hidden; }
@@ -632,30 +640,40 @@
   /* ---------- Village gallery (real photos) ---------- */
   (function(){
     const items = [
-      { name:'Khet-Khaliyan', src:'images/khet-khaliyan.jpg' },
-      { name:'Gaon Ka Rasta', src:'images/gaon-ka-rasta.jpg' },
-      { name:'Ghar Ka Aangan', src:'images/ghar-ka-aangan.jpg' },
-      { name:'Peepal Chaupal', src:'images/peepal-chaupal.jpg' },
-      { name:'Talaab', src:'images/talaab.jpg' },
-      { name:'Shaam Ka Manzar', src:'images/shaam-ka-manzar.jpg' }
+      { name:'Khet-Khaliyan', src:'images/khet-khaliyan.jpg', type:'image' },
+      { name:'Gaon Ka Rasta', src:'images/gaon-ka-rasta.jpg', type:'image' },
+      { name:'Barish Ka Nazara', src:'videos/barish.mp4', poster:'images/barish-poster.jpg', type:'video' },
+      { name:'Gaon Ka School', src:'images/gaon-ka-school.jpg', type:'image' },
+      { name:'Talaab', src:'images/talaab.jpg', type:'image' },
+      { name:'Shaam Ka Manzar', src:'images/shaam-ka-manzar.jpg', type:'image' }
     ];
     const grid = document.getElementById('galGrid');
-    grid.innerHTML = items.map((it,i)=>
-      `<div class="gal-item" data-i="${i}"><img src="${it.src}" alt="${it.name}" loading="lazy" /><div class="cap">${it.name}</div></div>`
-    ).join('');
+    grid.innerHTML = items.map((it,i)=>{
+      const thumb = it.type === 'video'
+        ? `<img src="${it.poster}" alt="${it.name}" loading="lazy" /><div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>`
+        : `<img src="${it.src}" alt="${it.name}" loading="lazy" />`;
+      return `<div class="gal-item" data-i="${i}">${thumb}<div class="cap">${it.name}</div></div>`;
+    }).join('');
     const lb = document.getElementById('lightbox');
     const lbArt = document.getElementById('lbArt');
     const lbCap = document.getElementById('lbCap');
     grid.querySelectorAll('.gal-item').forEach((el,i)=>{
       el.addEventListener('click', ()=>{
-        lbArt.innerHTML = `<img src="${items[i].src}" alt="${items[i].name}" />`;
+        lbArt.innerHTML = items[i].type === 'video'
+          ? `<video src="${items[i].src}" poster="${items[i].poster}" controls autoplay playsinline></video>`
+          : `<img src="${items[i].src}" alt="${items[i].name}" />`;
         lbCap.textContent = items[i].name;
         lb.classList.add('open');
       });
     });
-    document.getElementById('lbClose').addEventListener('click', ()=> lb.classList.remove('open'));
-    lb.addEventListener('click', (e)=>{ if(e.target===lb) lb.classList.remove('open'); });
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') lb.classList.remove('open'); });
+    document.getElementById('lbClose').addEventListener('click', ()=> closeLightbox());
+    lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLightbox(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLightbox(); });
+    function closeLightbox(){
+      const vid = lbArt.querySelector('video');
+      if(vid) vid.pause();
+      lb.classList.remove('open');
+    }
     observeReveals();
   })();
 
