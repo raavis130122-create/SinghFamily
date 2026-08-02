@@ -659,9 +659,18 @@
     const lbCap = document.getElementById('lbCap');
     grid.querySelectorAll('.gal-item').forEach((el,i)=>{
       el.addEventListener('click', ()=>{
-        lbArt.innerHTML = items[i].type === 'video'
-          ? `<video src="${items[i].src}" poster="${items[i].poster}" controls autoplay playsinline></video>`
-          : `<img src="${items[i].src}" alt="${items[i].name}" />`;
+        if(items[i].type === 'video'){
+          lbArt.innerHTML = `<video poster="${items[i].poster}" controls playsinline></video>`;
+          const vid = lbArt.querySelector('video');
+          vid.src = items[i].src;
+          vid.load();
+          const playPromise = vid.play();
+          if(playPromise !== undefined){
+            playPromise.catch(()=>{ /* autoplay blocked — user can tap the controls play button */ });
+          }
+        } else {
+          lbArt.innerHTML = `<img src="${items[i].src}" alt="${items[i].name}" />`;
+        }
         lbCap.textContent = items[i].name;
         lb.classList.add('open');
       });
