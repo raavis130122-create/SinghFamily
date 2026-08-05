@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -310,6 +311,88 @@
   #splash .s-track{ width:120px; height:3px; border-radius:100px; background:rgba(255,255,255,0.15); overflow:hidden; }
   #splash .s-fill{ width:40%; height:100%; background:var(--sand); border-radius:100px; animation:s-load 1.1s ease-in-out infinite; }
   @keyframes s-load{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(340%);} }
+
+  /* ---------- Scrollable nav ---------- */
+  .nav-tabs{
+    display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; padding:2px 0;
+  }
+  .nav-tabs::-webkit-scrollbar{ display:none; }
+  .site-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px;
+    color:var(--moss-deep); white-space:nowrap;
+  }
+
+  /* ---------- Home: full-screen hero ---------- */
+  .home-hero{
+    position:relative; height:88vh; min-height:460px; margin-top:14px;
+    border-radius:22px; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    text-align:center; isolation:isolate;
+  }
+  .home-hero video, .home-hero .hero-bg{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;
+  }
+  .home-hero .hero-bg{
+    background:linear-gradient(120deg, var(--moss-deep), var(--moss), #6E9878, var(--moss-deep));
+    background-size:300% 300%;
+    animation:heroFlow 14s ease-in-out infinite;
+  }
+  @keyframes heroFlow{
+    0%{ background-position:0% 50%; }
+    50%{ background-position:100% 50%; }
+    100%{ background-position:0% 50%; }
+  }
+  .home-hero::after{
+    content:""; position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(20,26,16,0.15), rgba(20,26,16,0.55));
+  }
+  .home-hero-content{ position:relative; z-index:2; padding:0 24px; color:#fff; }
+  .home-hero .eyebrow{ background:rgba(255,255,255,0.16); color:#fff; }
+  .home-hero h1{ color:#fff; }
+  .home-hero .lede{ color:rgba(255,255,255,0.9); max-width:520px; margin:0 auto; }
+  .explore-btn{
+    display:inline-flex; align-items:center; gap:8px; margin-top:26px;
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px;
+    padding:13px 26px; border-radius:100px; border:none; cursor:pointer;
+    background:var(--sand); color:#fff; box-shadow:0 10px 26px rgba(232,163,61,0.4);
+    transition:transform 0.2s ease;
+  }
+  .explore-btn:hover{ transform:translateY(-2px); }
+  .explore-btn svg{ width:16px; height:16px; }
+
+  /* ---------- Highlight cards ---------- */
+  .hl-card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .hl-icon{
+    width:42px; height:42px; border-radius:12px; background:#EAF0E9; color:var(--moss);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .hl-icon svg{ width:21px; height:21px; }
+  .hl-card .t{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15.5px; color:var(--moss-deep); }
+  .hl-card .d{ font-size:13px; color:var(--muted); line-height:1.55; }
+
+  /* ---------- Contact page ---------- */
+  .contact-form{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px; }
+  .form-row{ margin-bottom:14px; }
+  .form-row label{ display:block; font-size:12.5px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:6px; }
+  .form-row input, .form-row textarea{
+    width:100%; padding:11px 14px; border-radius:10px; border:1px solid var(--line);
+    background:var(--bg); color:var(--ink); font-family:'Inter', sans-serif; font-size:14px;
+  }
+  .form-row textarea{ resize:vertical; min-height:90px; }
+  .form-submit{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14px;
+    padding:12px 24px; border-radius:100px; border:none; cursor:pointer;
+    background:var(--moss); color:#fff; transition:transform 0.2s ease;
+  }
+  .form-submit:hover{ transform:translateY(-1px); }
+  .form-note{ font-size:12px; color:var(--muted); margin-top:10px; }
+  .emg-row{ display:flex; align-items:center; justify-content:space-between; padding:13px 18px; border-bottom:1px solid var(--line); font-size:14px; }
+  .emg-row:last-child{ border-bottom:none; }
+  .emg-row b{ color:var(--moss-deep); font-family:'Space Grotesk',sans-serif; }
+  .emg-list{ background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
 </style>
 </head>
 <body>
@@ -323,25 +406,231 @@
 <div class="topbar">
   <div class="topbar-inner">
     <div class="topbar-row">
-      <button class="tab-btn active" data-page="gaon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 001 1h12a1 1 0 001-1v-9"/><path d="M10 20v-6h4v6"/></svg>
-        My Village
+      <div class="site-title">Meghai Khas</div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
-      <div class="nav-right">
-        <button class="tab-btn" data-page="vanshavali">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.8 4.4-6 7.5-6s6.1 2.2 7.5 6"/></svg>
-          About Me
-        </button>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
-          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        </button>
-      </div>
+    </div>
+    <div class="nav-tabs" style="margin-top:10px;">
+      <button class="tab-btn active" data-page="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 001 1h12a1 1 0 001-1v-9"/><path d="M10 20v-6h4v6"/></svg>
+        Home
+      </button>
+      <button class="tab-btn" data-page="about">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        About
+      </button>
+      <button class="tab-btn" data-page="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        Statistics
+      </button>
+      <button class="tab-btn" data-page="contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v14H7l-3 3z"/></svg>
+        Contact
+      </button>
+      <button class="tab-btn" data-page="vanshavali">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.8 4.4-6 7.5-6s6.1 2.2 7.5 6"/></svg>
+        About Me
+      </button>
     </div>
   </div>
 </div>
 
 <div class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section class="page active" id="home">
+    <div class="home-hero reveal">
+      <div class="hero-bg"></div>
+      <div class="home-hero-content">
+        <div class="eyebrow">Sagri Tehsil, Azamgarh · Uttar Pradesh</div>
+        <h1>Welcome to Meghai Khas, Uttar Pradesh</h1>
+        <p class="lede">Ek chhota sa gaon, badi si kahani — Azmatgarh block ke Meghai Khas mein aapka swagat hai.</p>
+        <button class="explore-btn" onclick="showPage('about')">
+          Explore the Village
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="page" id="about">
+    <div class="hero" style="padding-top:36px;">
+      <div class="eyebrow">Village Introduction</div>
+      <h1 style="font-size:clamp(30px,6vw,48px);">Meghai Khas</h1>
+      <p class="lede">Meghai Khas is a village in Azmatgarh block, Azamgarh district, Uttar Pradesh — spanning <b>154.62 hectares</b>, with village PIN code <b>276124</b>. Yeh gaon Sagri tehsil mein sthit hai aur apni gram panchayat ke antargat aata hai.</p>
+    </div>
+
+    <div class="stitle">Location &amp; Administration</div>
+    <div class="grid2 reveal">
+      <div class="card"><div class="k">District &amp; State</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azamgarh district, Uttar Pradesh</div></div>
+      <div class="card"><div class="k">Block &amp; Tehsil</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azmatgarh community development block, Sagri tehsil</div></div>
+      <div class="card"><div class="k">Distance from Azamgarh HQ</div><div class="d" style="font-size:14.5px; margin-top:8px;">25 KM towards East from District headquarters</div></div>
+      <div class="card"><div class="k">Distance from State Capital</div><div class="d" style="font-size:14.5px; margin-top:8px;">297 KM from Lucknow</div></div>
+      <div class="card"><div class="k">Pincode</div><div class="d" style="font-size:14.5px; margin-top:8px;">276124 — postal head office Azamatgarh Estate</div></div>
+      <div class="card"><div class="k">Nearby Cities</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azamgarh, Gorakhpur, Ghazipur, Mau, Ballia</div></div>
+    </div>
+
+    <div class="stitle">How to Reach Meghai Khas</div>
+    <div class="grid3 reveal">
+      <div class="card"><div class="k">By Train</div><div class="d" style="font-size:14.5px; margin-top:8px;">Trains available from Azamgarh district HQ</div></div>
+      <div class="card"><div class="k">By Bus</div><div class="d" style="font-size:14.5px; margin-top:8px;">Buses pass by the village road on a regular basis</div></div>
+      <div class="card"><div class="k">Local Transport</div><div class="d" style="font-size:14.5px; margin-top:8px;">Shared taxi, auto and e-rickshaw available anytime</div></div>
+    </div>
+
+    <div class="stitle">History</div>
+    <div class="card reveal">
+      <div class="d" style="font-size:14.5px; line-height:1.7;">
+        Meghai Khas gaon ki jaded sadiyon purani hain — ismein rehne wale parivaar peedhi dar peedhi yahan basey hain. Gaon ka naam aur uski mitti dono hi Azamgarh ki purani sanskritik virasat se judi hui hain. <em>(Yeh section placeholder hai — sahi historical details baad me update ki ja sakti hain.)</em>
+      </div>
+    </div>
+
+    <div class="stitle">Culture &amp; Traditions</div>
+    <div class="grid3 reveal">
+      <div class="card"><div class="k">Festivals</div><div class="d" style="font-size:14.5px; margin-top:8px;">Holi, Diwali, Chhath Puja aur local mela poore josh ke saath manaye jaate hain.</div></div>
+      <div class="card"><div class="k">Local Cuisine</div><div class="d" style="font-size:14.5px; margin-top:8px;">Litti-chokha, dal-baati aur ghar ke bane pakwaan gaon ki pehchaan hain.</div></div>
+      <div class="card"><div class="k">Customs</div><div class="d" style="font-size:14.5px; margin-top:8px;">Grameen panchayat aur samuhik parampara aaj bhi gaon ki rojmarra zindagi ka hissa hain.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= STATISTICS ================= -->
+  <section class="page" id="stats">
+    <div class="hero" style="padding-top:36px;">
+      <div class="eyebrow">Village Statistics</div>
+      <h1 style="font-size:clamp(30px,6vw,48px);">Meghai Khas in Numbers</h1>
+      <p class="lede">Census 2011 aur panchayat records ke anusaar gaon ke aankde.</p>
+    </div>
+
+    <div class="stitle">Demographics (Census 2011)</div>
+    <div class="grid3 reveal">
+      <div class="card"><div class="k">Total Population</div><div class="v">2,173</div><div class="d">Local language: Hindi</div></div>
+      <div class="card"><div class="k">Total Houses</div><div class="v">362</div></div>
+      <div class="card"><div class="k">Female Population</div><div class="v">51.3%</div><div class="d">1,114 of total population</div></div>
+      <div class="card"><div class="k">Scheduled Caste Population</div><div class="v">26.1%</div><div class="d">567 of total population</div></div>
+      <div class="card"><div class="k">Scheduled Tribe Population</div><div class="v">0.0%</div><div class="d">0 of total population</div></div>
+      <div class="card"><div class="k">Working Population</div><div class="v">32.0%</div></div>
+      <div class="card"><div class="k">Child (0–6) Population</div><div class="v">293</div><div class="d">as per 2011 Census</div></div>
+      <div class="card"><div class="k">Girl Child (0–6)</div><div class="v">46.1%</div><div class="d">135 of child population</div></div>
+    </div>
+
+    <div class="stitle">Area &amp; Panchayat</div>
+    <div class="grid2 reveal">
+      <div class="card"><div class="k">Village Area</div><div class="v">154.62</div><div class="d">hectares · Census village code 193242</div></div>
+      <div class="card"><div class="k">Gram Panchayat</div><div class="v">Meghai Khas</div><div class="d">Azmatgarh block, Sagri tehsil — placeholder, panchayat details baad me update ho sakte hain</div></div>
+    </div>
+
+    <div class="stitle">Agriculture</div>
+    <div class="grid2 reveal">
+      <div class="card"><div class="k">Main Crops</div><div class="d" style="font-size:14.5px; margin-top:8px;">Dhaan, gehun, ganna (placeholder data, baad me update ho sakta hai)</div></div>
+      <div class="card"><div class="k">Cultivable Land</div><div class="d" style="font-size:14.5px; margin-top:8px;">Data jald update kiya jayega (placeholder)</div></div>
+    </div>
+
+    <div class="stitle">Literacy Rate</div>
+    <div class="bars reveal">
+      <div class="prow">
+        <div class="plabel"><span>Overall Literacy Rate</span><b>65.9%</b></div>
+        <div class="ptrack"><div class="pfill" style="width:65.9%"></div></div>
+      </div>
+      <div class="prow">
+        <div class="plabel"><span>Female Literacy Rate</span><b>29.8%</b></div>
+        <div class="ptrack"><div class="pfill sand" style="width:29.8%"></div></div>
+      </div>
+    </div>
+    <p style="font-size:12.5px; color:var(--muted); margin-top:2px;">1,431 total literates (647 female) out of the total village population, as per Census 2011.</p>
+    <footer style="border-top:none; padding-top:10px;">
+      Source: Population Census 2011, Government of India
+    </footer>
+  </section>
+
+  <!-- ================= CONTACT (Highlights + Gallery + Village Map + Contact) ================= -->
+  <section class="page" id="contact">
+    <div class="hero" style="padding-top:36px;">
+      <div class="eyebrow">Village Highlights</div>
+      <h1 style="font-size:clamp(30px,6vw,48px);">What Meghai Khas Offers</h1>
+      <p class="lede">Gaon ki bunyadi suvidhayein aur khaasiyatein — ek jhalak.</p>
+    </div>
+    <div class="grid3 reveal">
+      <div class="hl-card">
+        <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9l8-5 8 5v10"/><path d="M9 22V14h6v8"/></svg></div>
+        <div class="t">Schools</div>
+        <div class="d">Gaon aur aas-paas ke primary aur upper-primary schools bachchon ko shiksha dete hain.</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v6M9 8h6l3 13H6L9 8z"/></svg></div>
+        <div class="t">Temples</div>
+        <div class="d">Sthaniya mandir gaon ki dharmik aur samajik zindagi ka kendra hain.</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.4-9.5-8.8C.7 8.6 2.5 5 6 5c2 0 3.3 1.1 4 2.2C10.7 6.1 12 5 14 5c3.5 0 5.3 3.6 3.5 7.2C19 16.6 12 21 12 21z"/></svg></div>
+        <div class="t">Health Centre</div>
+        <div class="d">Bunyadi swasthya suvidhaon ke liye health centre gaon walon ki seva karta hai.</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20L20 4M4 4l16 16"/></svg></div>
+        <div class="t">Roads</div>
+        <div class="d">Panchayat aur block sadkein gaon ko nearby cities se jodti hain.</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2c-4 4-6 7-6 10a6 6 0 0012 0c0-3-2-6-6-10z"/></svg></div>
+        <div class="t">Farming</div>
+        <div class="d">Kheti-kisani gaon ki arthvyavastha ki riid hai — dhaan, gehun aur mausami fasal.</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3"/></svg></div>
+        <div class="t">Government Schemes</div>
+        <div class="d">Awaas Yojana, ration suvidha aur anya sarkari yojanaon ka labh gaon ke logon ko milta hai.</div>
+      </div>
+    </div>
+
+    <div class="stitle">Gallery</div>
+    <div class="gal-grid" id="galGrid"></div>
+
+    <div class="stitle">Village Map</div>
+    <div class="reveal">
+      <div class="map-box" id="mapBox">
+        <div id="leafletMap" style="width:100%; height:100%;"></div>
+      </div>
+      <div class="map-info"><b>Meghai Khas</b> — 154.62 hectares, Census village code 193242. Azmatgarh block, Sagri tehsil, Azamgarh district, Uttar Pradesh, pincode 276124. <a href="https://www.google.com/maps/search/?api=1&query=Meghai+Khas+Azmatgarh+Sagri+Azamgarh+Uttar+Pradesh" target="_blank" rel="noopener">Google Maps par kholein →</a></div>
+    </div>
+
+    <div class="stitle">Get in Touch</div>
+    <p class="lede" style="margin-bottom:6px;">Gram Panchayat details, contact form aur emergency numbers.</p>
+
+    <div class="stitle">Gram Panchayat</div>
+    <div class="grid2 reveal">
+      <div class="card"><div class="k">Gram Panchayat</div><div class="d" style="font-size:14.5px; margin-top:8px;">Meghai Khas, Azmatgarh block, Sagri tehsil, Azamgarh — placeholder, editable</div></div>
+      <div class="card"><div class="k">Address</div><div class="d" style="font-size:14.5px; margin-top:8px;">Meghai Khas, Azamgarh, Uttar Pradesh 276124</div></div>
+    </div>
+
+    <div class="stitle">Send a Message</div>
+    <form class="contact-form reveal" id="contactForm">
+      <div class="form-row">
+        <label for="cName">Name</label>
+        <input type="text" id="cName" placeholder="Aapka naam" required />
+      </div>
+      <div class="form-row">
+        <label for="cContact">Email / Phone</label>
+        <input type="text" id="cContact" placeholder="Email ya phone number" required />
+      </div>
+      <div class="form-row">
+        <label for="cMsg">Message</label>
+        <textarea id="cMsg" placeholder="Apna sandesh likhein"></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message</button>
+      <p class="form-note">Yeh form abhi backend se connected nahi hai — baad me email/API se jod sakte hain.</p>
+    </form>
+
+    <div class="stitle">Emergency Numbers</div>
+    <div class="emg-list reveal">
+      <div class="emg-row"><span>Police</span><b>100</b></div>
+      <div class="emg-row"><span>Ambulance</span><b>108</b></div>
+      <div class="emg-row"><span>Fire Brigade</span><b>101</b></div>
+      <div class="emg-row"><span>Health Centre (local)</span><b>Editable — update karein</b></div>
+      <div class="emg-row"><span>Gram Pradhan (local)</span><b>Editable — update karein</b></div>
+    </div>
+  </section>
 
   <!-- ================= ABOUT ME (Vanshavali) ================= -->
   <section class="page" id="vanshavali">
@@ -459,77 +748,6 @@
     </div>
   </section>
 
-  <!-- ================= GAON ================= -->
-  <section class="page active" id="gaon">
-    <div class="village-banner">
-      <video autoplay muted loop playsinline poster="images/banner-poster.jpg">
-        <source src="videos/banner-video.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="hero" style="padding-top:36px;">
-      <div class="eyebrow">Sagri Tehsil, Azamgarh · Uttar Pradesh</div>
-      <h1 style="font-size:clamp(30px,6vw,48px);">Meghai Khas</h1>
-      <p class="lede">Meghai Khas is a village in Azmatgarh block, Azamgarh district, Uttar Pradesh — spanning <b>154.62 hectares</b>, with village PIN code <b>27614</b>.</p>
-    </div>
-
-    <div class="stitle">Location &amp; Administration</div>
-    <div class="grid2 reveal">
-      <div class="card"><div class="k">District &amp; State</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azamgarh district, Uttar Pradesh</div></div>
-      <div class="card"><div class="k">Block &amp; Tehsil</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azmatgarh community development block, Sagri tehsil</div></div>
-      <div class="card"><div class="k">Distance from Azamgarh HQ</div><div class="d" style="font-size:14.5px; margin-top:8px;">25 KM towards East from District headquarters</div></div>
-      <div class="card"><div class="k">Distance from State Capital</div><div class="d" style="font-size:14.5px; margin-top:8px;">297 KM from Lucknow</div></div>
-      <div class="card"><div class="k">Pincode</div><div class="d" style="font-size:14.5px; margin-top:8px;">276124 — postal head office Azamatgarh Estate</div></div>
-      <div class="card"><div class="k">Nearby Cities</div><div class="d" style="font-size:14.5px; margin-top:8px;">Azamgarh, Gorakhpur, Ghazipur, Mau, Ballia</div></div>
-    </div>
-
-    <div class="stitle">How to Reach Meghai Khas</div>
-    <div class="grid3 reveal">
-      <div class="card"><div class="k">By Train</div><div class="d" style="font-size:14.5px; margin-top:8px;">Trains available from Azamgarh district HQ</div></div>
-      <div class="card"><div class="k">By Bus</div><div class="d" style="font-size:14.5px; margin-top:8px;">Buses pass by the village road on a regular basis</div></div>
-      <div class="card"><div class="k">Local Transport</div><div class="d" style="font-size:14.5px; margin-top:8px;">Shared taxi, auto and e-rickshaw available anytime</div></div>
-    </div>
-
-    <div class="stitle">Demographics (Census 2011)</div>
-    <div class="grid3 reveal">
-      <div class="card"><div class="k">Total Population</div><div class="v">2,173</div><div class="d">Local language: Hindi</div></div>
-      <div class="card"><div class="k">Total Houses</div><div class="v">362</div></div>
-      <div class="card"><div class="k">Female Population</div><div class="v">51.3%</div><div class="d">1,114 of total population</div></div>
-      <div class="card"><div class="k">Scheduled Caste Population</div><div class="v">26.1%</div><div class="d">567 of total population</div></div>
-      <div class="card"><div class="k">Scheduled Tribe Population</div><div class="v">0.0%</div><div class="d">0 of total population</div></div>
-      <div class="card"><div class="k">Working Population</div><div class="v">32.0%</div></div>
-      <div class="card"><div class="k">Child (0–6) Population</div><div class="v">293</div><div class="d">as per 2011 Census</div></div>
-      <div class="card"><div class="k">Girl Child (0–6)</div><div class="v">46.1%</div><div class="d">135 of child population</div></div>
-    </div>
-
-    <div class="stitle">Literacy Rate</div>
-    <div class="bars reveal">
-      <div class="prow">
-        <div class="plabel"><span>Overall Literacy Rate</span><b>65.9%</b></div>
-        <div class="ptrack"><div class="pfill" style="width:65.9%"></div></div>
-      </div>
-      <div class="prow">
-        <div class="plabel"><span>Female Literacy Rate</span><b>29.8%</b></div>
-        <div class="ptrack"><div class="pfill sand" style="width:29.8%"></div></div>
-      </div>
-    </div>
-    <p style="font-size:12.5px; color:var(--muted); margin-top:2px;">1,431 total literates (647 female) out of the total village population, as per Census 2011.</p>
-
-    <div class="stitle">Gaon Ka Location</div>
-    <div class="reveal">
-      <div class="map-box" id="mapBox">
-        <div id="leafletMap" style="width:100%; height:100%;"></div>
-      </div>
-      <div class="map-info"><b>Meghai Khas</b> — 154.62 hectares, Census village code 193242. Azmatgarh block, Sagri tehsil, Azamgarh district, Uttar Pradesh, pincode 276124. <a href="https://www.google.com/maps/search/?api=1&query=Meghai+Khas+Azmatgarh+Sagri+Azamgarh+Uttar+Pradesh" target="_blank" rel="noopener">Google Maps par kholein →</a></div>
-    </div>
-
-    <div class="stitle">Gaon Gallery</div>
-    <div class="gal-grid" id="galGrid"></div>
-
-    <footer style="border-top:none; padding-top:10px;">
-      Source: Population Census 2011, Government of India
-    </footer>
-  </section>
-
 </div>
 
 <footer>
@@ -580,7 +798,7 @@
     document.getElementById(id).classList.add('active');
     document.querySelector('.tab-btn[data-page="' + id + '"]').classList.add('active');
     window.scrollTo(0,0);
-    if(id === 'gaon' && window.villageMap){ setTimeout(()=> window.villageMap.invalidateSize(), 60); }
+    if(id === 'contact' && window.villageMap){ setTimeout(()=> window.villageMap.invalidateSize(), 60); }
   }
   document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=> showPage(btn.dataset.page));
@@ -684,6 +902,17 @@
       lb.classList.remove('open');
     }
     observeReveals();
+  })();
+
+  /* ---------- Contact form (no backend yet) ---------- */
+  (function(){
+    const form = document.getElementById('contactForm');
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      alert('Dhanyavaad! Aapka sandesh note kar liya gaya hai. (Form abhi backend se connected nahi hai.)');
+      form.reset();
+    });
   })();
 
   /* ---------- Back to top ---------- */
